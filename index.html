@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Nakoda TravelHub CRM</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nakoda TravelHub CRM V1.1</title>
 
 <style>
+
+:root{
+--primary:#0f4c81;
+--bg:#f4f6fa;
+--card:#ffffff;
+}
 
 *{
 margin:0;
@@ -17,315 +22,53 @@ font-family:Segoe UI,sans-serif;
 
 body{
 display:flex;
-background:#f4f6fa;
+background:var(--bg);
 height:100vh;
+overflow:hidden;
 }
 
 .sidebar{
-
 width:240px;
-background:#0f4c81;
+background:var(--primary);
 color:white;
-
 padding:20px;
 }
 
 .sidebar h2{
-
-margin-bottom:30px;
-
+margin-bottom:25px;
 }
 
-.menu button{
-
+.sidebar button{
 width:100%;
 padding:12px;
+margin-bottom:8px;
 border:none;
-margin-bottom:10px;
-
 background:none;
 color:white;
-
-cursor:pointer;
 text-align:left;
-
+cursor:pointer;
+border-radius:6px;
 }
 
-.menu button:hover{
-
+.sidebar button:hover{
 background:rgba(255,255,255,.1);
-
 }
 
 .main{
-
 flex:1;
-padding:20px;
-
 overflow:auto;
-
+padding:20px;
 }
 
-.topbar{
-
+.top{
 display:flex;
 justify-content:space-between;
+align-items:center;
 margin-bottom:20px;
-
 }
 
-.card-grid{
-
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-
-gap:15px;
-
-}
-
-.card{
-
-background:white;
-padding:20px;
-border-radius:12px;
-
-box-shadow:0 2px 6px rgba(0,0,0,.08);
-
-}
-
-.card h3{
-
-font-size:14px;
-
-color:#666;
-
-}
-
-.card p{
-
-font-size:30px;
-font-weight:bold;
-
-margin-top:10px;
-
-}
-
-.section{
-
-margin-top:25px;
-
-background:white;
-
-padding:15px;
-
-border-radius:10px;
-
-box-shadow:0 2px 6px rgba(0,0,0,.08);
-
-}
-
-input,select{
-
-width:100%;
-padding:10px;
-margin-top:8px;
-margin-bottom:10px;
-
-}
-
-button.action{
-
-background:#0f4c81;
-color:white;
-
+.btn{
+padding:10px 14px;
+background:var(--primary);
 border:none;
-
-padding:10px 16px;
-
-border-radius:6px;
-
-cursor:pointer;
-}
-
-table{
-
-width:100%;
-border-collapse:collapse;
-
-margin-top:10px;
-
-}
-
-table th{
-
-background:#0f4c81;
-
 color:white;
-
-padding:10px;
-
-}
-
-table td{
-
-padding:10px;
-
-border-bottom:1px solid #ddd;
-
-}
-
-.green{
-
-color:green;
-
-}
-
-.orange{
-
-color:orange;
-
-}
-
-.red{
-
-color:red;
-
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="sidebar">
-
-<h2>✈ Nakoda TravelHub</h2>
-
-<div class="menu">
-
-<button>🏠 Dashboard</button>
-
-<button>📋 Bookings</button>
-
-<button>👥 Passengers</button>
-
-<button>💰 Finance</button>
-
-<button>📄 Documents</button>
-
-<button>📊 Reports</button>
-
-</div>
-
-</div>
-
-<div class="main">
-
-<div class="topbar">
-
-<h1>Dashboard</h1>
-
-<button class="action">
-+ New Booking
-</button>
-
-</div>
-
-<div class="card-grid">
-
-<div class="card">
-
-<h3>Total Bookings</h3>
-
-<p>1</p>
-
-</div>
-
-<div class="card">
-
-<h3>Names Pending</h3>
-
-<p class="orange">1</p>
-
-</div>
-
-<div class="card">
-
-<h3>Passports Pending</h3>
-
-<p class="orange">1</p>
-
-</div>
-
-<div class="card">
-
-<h3>Ready For Ticketing</h3>
-
-<p>0</p>
-
-</div>
-
-<div class="card">
-
-<h3>Collections Due</h3>
-
-<p>₹0</p>
-
-</div>
-
-<div class="card">
-
-<h3>Expected Profit</h3>
-
-<p class="green">₹39,890</p>
-
-</div>
-
-</div>
-
-<div class="section">
-
-<h2>Current Bookings</h2>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Booking ID</th>
-<th>Group</th>
-<th>Status</th>
-<th>Pax</th>
-<th>Passports</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td>NTH-2026-0001</td>
-
-<td>Rathi Bunglow Group</td>
-
-<td>Collecting Names</td>
-
-<td>4</td>
-
-<td>3 / 4</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-</body>
-</html>
