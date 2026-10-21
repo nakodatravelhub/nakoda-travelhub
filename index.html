@@ -1,74 +1,487 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Nakoda TravelHub CRM V1.1</title>
+<title>Nakoda TravelHub CRM</title>
 
 <style>
 
-:root{
---primary:#0f4c81;
---bg:#f4f6fa;
---card:#ffffff;
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Segoe UI,sans-serif;
-}
-
 body{
-display:flex;
-background:var(--bg);
-height:100vh;
-overflow:hidden;
+font-family:Segoe UI;
+margin:0;
+background:#f4f6fa;
 }
 
-.sidebar{
-width:240px;
-background:var(--primary);
+header{
+background:#0f4c81;
 color:white;
-padding:20px;
+padding:15px;
+font-size:22px;
+font-weight:bold;
 }
 
-.sidebar h2{
-margin-bottom:25px;
+.container{
+padding:15px;
 }
 
-.sidebar button{
+.card{
+background:white;
+padding:15px;
+margin-bottom:15px;
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+
+.kpis{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:10px;
+}
+
+.kpi{
+background:white;
+padding:15px;
+border-radius:10px;
+text-align:center;
+box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+
+.kpi b{
+display:block;
+font-size:24px;
+}
+
+input,select{
 width:100%;
-padding:12px;
-margin-bottom:8px;
-border:none;
-background:none;
-color:white;
-text-align:left;
-cursor:pointer;
+padding:10px;
+margin:6px 0;
+border:1px solid #ddd;
 border-radius:6px;
 }
 
-.sidebar button:hover{
-background:rgba(255,255,255,.1);
-}
-
-.main{
-flex:1;
-overflow:auto;
-padding:20px;
-}
-
-.top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-}
-
-.btn{
-padding:10px 14px;
-background:var(--primary);
-border:none;
+button{
+background:#0f4c81;
 color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.booking{
+background:white;
+margin-top:10px;
+padding:15px;
+border-radius:10px;
+border-left:6px solid orange;
+box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.green{
+border-left-color:green;
+}
+
+.red{
+border-left-color:red;
+}
+
+img.preview{
+max-width:100%;
+margin-top:10px;
+border-radius:8px;
+}
+
+small{
+color:#666;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+✈ Nakoda TravelHub CRM
+</header>
+
+<div class="container">
+
+<div class="kpis">
+
+<div class="kpi">
+<b id="bookingCount">0</b>
+Bookings
+</div>
+
+<div class="kpi">
+<b id="passportPending">0</b>
+Passport Pending
+</div>
+
+<div class="kpi">
+<b id="profitTotal">₹0</b>
+Profit
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>New Booking From Screenshot</h3>
+
+<input
+type="file"
+id="flightImage"
+accept="image/*">
+
+<img
+id="flightPreview"
+class="preview"
+style="display:none;">
+
+<input
+id="group"
+placeholder="Group Name">
+
+<input
+id="reference"
+placeholder="Reference">
+
+<input
+id="airline"
+placeholder="Airline">
+
+<input
+id="sector"
+placeholder="BOM-CMB-BOM">
+
+<input
+id="travelDate"
+placeholder="15-Dec-2026">
+
+<input
+id="returnDate"
+placeholder="22-Dec-2026">
+
+<select id="cabin">
+
+<option>Economy</option>
+<option>Business</option>
+<option>First Class</option>
+
+</select>
+
+<input
+id="pax"
+type="number"
+placeholder="Passengers">
+
+<input
+id="sale"
+type="number"
+placeholder="Sale Value">
+
+<input
+id="cost"
+type="number"
+placeholder="Supplier Cost">
+
+<button onclick="saveBooking()">
+Create Booking
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>Search Booking</h3>
+
+<input
+id="search"
+placeholder="Search"
+onkeyup="renderBookings()">
+
+</div>
+
+<div id="bookings"></div>
+
+</div>
+
+<script>
+
+let screenshotData="";
+let screenshotName="";
+
+let bookings=
+JSON.parse(
+localStorage.getItem("bookings")
+);
+
+if(!bookings){
+
+bookings=[{
+
+id:"NTH-2026-0001",
+
+group:"Rathi Bunglow Group",
+
+reference:"Sonil",
+
+airline:"SriLankan",
+
+sector:"BOM-CMB-BOM",
+
+travelDate:"15-Dec-2026",
+
+returnDate:"22-Dec-2026",
+
+cabin:"Business",
+
+pax:4,
+
+passports:3,
+
+sale:279890,
+
+cost:240000,
+
+status:"Collecting Names",
+
+screenshotName:"",
+
+screenshotData:""
+
+}];
+
+saveStore();
+
+}
+
+document
+.getElementById("flightImage")
+.addEventListener(
+"change",
+function(e){
+
+const file=e.target.files[0];
+
+if(!file) return;
+
+screenshotName=file.name;
+
+const reader=
+new FileReader();
+
+reader.onload=function(ev){
+
+screenshotData=
+ev.target.result;
+
+const img=
+document.getElementById(
+"flightPreview"
+);
+
+img.src=
+screenshotData;
+
+img.style.display=
+"block";
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+function saveStore(){
+
+localStorage.setItem(
+"bookings",
+JSON.stringify(bookings)
+);
+
+}
+
+function saveBooking(){
+
+const booking={
+
+id:
+"NTH-2026-"+
+String(bookings.length+1)
+.padStart(4,"0"),
+
+group:
+document.getElementById("group").value,
+
+reference:
+document.getElementById("reference").value,
+
+airline:
+document.getElementById("airline").value,
+
+sector:
+document.getElementById("sector").value,
+
+travelDate:
+document.getElementById("travelDate").value,
+
+returnDate:
+document.getElementById("returnDate").value,
+
+cabin:
+document.getElementById("cabin").value,
+
+pax:
+Number(
+document.getElementById("pax").value
+),
+
+passports:0,
+
+sale:
+Number(
+document.getElementById("sale").value
+),
+
+cost:
+Number(
+document.getElementById("cost").value
+),
+
+status:"Confirmed",
+
+screenshotName:
+screenshotName,
+
+screenshotData:
+screenshotData
+
+};
+
+bookings.push(booking);
+
+saveStore();
+
+renderBookings();
+
+alert("Booking Created");
+
+}
+
+function renderBookings(){
+
+let html="";
+
+let profit=0;
+let pending=0;
+
+const search=
+document
+.getElementById("search")
+.value
+.toLowerCase();
+
+bookings
+.filter(b=>
+
+b.group.toLowerCase().includes(search)
+
+||
+
+b.reference.toLowerCase().includes(search)
+
+||
+
+b.id.toLowerCase().includes(search)
+
+)
+
+.forEach(b=>{
+
+profit +=
+(b.sale-b.cost);
+
+pending +=
+Math.max(
+0,
+b.pax-b.passports
+);
+
+let cls=
+pending>0
+? ""
+: "green";
+
+html+=`
+
+<div class="booking ${cls}">
+
+<b>${b.id}</b><br>
+
+${b.group}<br>
+
+Reference:
+${b.reference}<br>
+
+${b.airline}<br>
+
+${b.sector}<br>
+
+${b.travelDate}<br>
+
+Status:
+${b.status}<br>
+
+Passengers:
+${b.passports}/${b.pax}<br>
+
+Profit:
+₹${(b.sale-b.cost).toLocaleString()}
+
+${
+b.screenshotData
+?
+`<br><br>
+<img
+src="${b.screenshotData}"
+class="preview">`
+:
+""
+}
+
+</div>
+
+`;
+
+});
+
+document
+.getElementById("bookings")
+.innerHTML=html;
+
+document
+.getElementById("bookingCount")
+.innerHTML=
+bookings.length;
+
+document
+.getElementById("passportPending")
+.innerHTML=
+pending;
+
+document
+.getElementById("profitTotal")
+.innerHTML=
+"₹"+profit.toLocaleString();
+
+}
+
+renderBookings();
+
+</script>
+
+</body>
+</html>
